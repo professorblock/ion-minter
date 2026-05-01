@@ -8,7 +8,7 @@ import { StyledContainer, StyledInput, StyledInputContainer } from "components/f
 interface InputProps {
   error: boolean;
   label?: string;
-  control: Control;
+  control: Control<any>;
   name: string;
   defaultValue: string | number;
   onExampleClick: () => void;
