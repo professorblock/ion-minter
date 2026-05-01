@@ -27,7 +27,7 @@ export const CredentialsWrapper = styled(Box)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   marginTop: theme.spacing(2),
-  color: "rgba(255,255,255,0.28)",
+  color: "rgba(255,255,255,0.52)",
   fontSize: 13,
   fontFamily: "'Inter', sans-serif",
   [theme.breakpoints.down("md")]: {
@@ -37,18 +37,18 @@ export const CredentialsWrapper = styled(Box)(({ theme }) => ({
 
 export const Separator = styled("hr")({
   height: "1px",
-  background: "rgba(255,255,255,0.06)",
+  background: "rgba(255,255,255,0.10)",
   border: "none",
   margin: 0,
 });
 
 export const FooterLink = styled(Link)(() => ({
-  color: "rgba(255,255,255,0.32)",
+  color: "rgba(255,255,255,0.62)",
   textDecoration: "none",
   fontFamily: "'Inter', sans-serif",
   fontSize: 13,
   transition: "color 180ms ease",
-  "&:hover": { color: "#00D4FF" },
+  "&:hover": { color: "#60A5FA" },
 }));
 
 export const CenteringWrapper = styled(Box)({

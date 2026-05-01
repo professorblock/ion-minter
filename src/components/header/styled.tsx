@@ -1,37 +1,31 @@
-import { AppBar, styled, Typography } from "@mui/material";
+import { AppBar, styled } from "@mui/material";
 import { Box } from "@mui/system";
-import { APP_GRID } from "consts";
 
 export const HeaderWrapper = styled(AppBar)(() => ({
-  height: 68,
-  background: "rgba(7,7,14,0.85)",
-  backdropFilter: "blur(24px)",
-  WebkitBackdropFilter: "blur(24px)",
-  borderBottom: "1px solid rgba(255,255,255,0.06)",
-  boxShadow: "none",
-  borderRadius: 0,
+  height: 88, // Reduced from 88
+  background: "rgba(0, 0, 0, 0.5)", // Darker, cleaner
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.05)", // Thinner border
+  boxShadow: "none", // Arena has no heavy shadow
+  position: "sticky",
+  top: 0,
+  zIndex: 1200,
 }));
 
 export const HeaderContent = styled(Box)(({ theme }) => ({
-  maxWidth: APP_GRID,
   width: "100%",
+  maxWidth: 1280, // Matches hero width
   margin: "0 auto",
   height: "100%",
-  display: "flex",
+  padding: "0 40px",
+  display: "grid",
+  gridTemplateColumns: "1fr auto 1fr", // Balanced grid
   alignItems: "center",
-  [theme.breakpoints.down("lg")]: { width: "calc(100% - 40px)" },
-  [theme.breakpoints.down("sm")]: { width: "calc(100% - 24px)" },
-}));
+  columnGap: 24,
 
-export const HeaderOptionalContent = styled(Box)(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  width: "100%",
-  height: "100%",
-  gap: 12,
+  [theme.breakpoints.down("md")]: {
+    gridTemplateColumns: "1fr auto",
+    padding: "0 16px",
+  },
 }));
-
-export const HeaderExampleTextWrapper = styled(Box)(() => ({ display: "none" }));
-export const HeaderExampleText = styled(Typography)(() => ({}));
-export const HeaderExampleLink = styled(Typography)(() => ({}));

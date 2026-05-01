@@ -21,7 +21,8 @@ const LogoCircle = styled(Box)(() => ({
   borderRadius: "50%",
   overflow: "hidden",
   flexShrink: 0,
-  border: "1.5px solid rgba(0,212,255,0.25)",
+  border: "1.5px solid rgba(96,165,250,0.45)",
+  boxShadow: "0 0 18px rgba(96,165,250,0.18)",
   "& img": { width: "100%", height: "100%", objectFit: "cover", display: "block" },
 }));
 
@@ -52,7 +53,7 @@ export const AppLogo = () => {
             fontSize: 19,
             letterSpacing: "-0.5px",
             lineHeight: 1.15,
-            background: "linear-gradient(135deg, #00D4FF 0%, #7C3AFF 100%)",
+            background: "linear-gradient(135deg, #60A5FA 0%, #818CF8 55%, #A78BFA 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -67,7 +68,7 @@ export const AppLogo = () => {
             fontWeight: 500,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
-            color: "rgba(255,255,255,0.3)",
+            color: "rgba(255,255,255,0.72)",
           }}>
           Token Minter
         </Box>
