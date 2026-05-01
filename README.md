@@ -1,42 +1,36 @@
-# Minter - Webclient
+# ION Minter
 
-An open source Jetton deployer webapp, based on [jetton contracts starter template](https://github.com/ton-blockchain/minter-contract).
+Jetton deployer and manager built on the ION/TON blockchain.
 
-## How to use
+## Requirements
 
-Instructions:
-Make sure you have a TON wallet with at least 0.25 TON balance.
+- Node 18 (use `nvm use` to switch automatically)
 
-Use your web browser to open the site of the deploy form: https://minter.ice.io
+## Setup
 
-To use the Testnet version open this link: https://minter.ice.io?testnet=true
+```bash
+nvm use
+npm install
+npm start
+```
 
-> Safety Notice: The form is based on this repo and served from GitHub Pages
+## Branches
 
-Click the "Connect Wallet" button to connect your wallet.
+- `master` — production only, protected
+- `staging` — active development
+- `feature/xyz` — one feature at a time, merged into staging
 
-Fill in the information about your Jetton in the form - choose a name, ticker and image URL.
+## Environment
 
-Deploy and approve the deploy transaction in your wallet.
+- `.env` — mainnet config
+- `.env.staging` — testnet config
 
-Once the token is deployed, the deploying wallet will receive all the tokens that were minted, and the form will encourage you to revoke ownership.
+## Deploy
 
-## Forking / Running your own instance
+```bash
+npm run build
+```
 
-> This project is based on [create-react-app](https://create-react-app.dev/).
+## Changelog
 
-Clone or fork the project
-
-Run `npm install`
-
-Run `npm start`
-
-Open `http://localhost:3000`
-
-## Is this tool safe?
-
-Yes. See https://github.com/ton-blockchain/minter-contract#qa-is-this-contract-deployer-safe
-
-# License
-
-MIT
+See [CHANGELOG.md](./CHANGELOG.md)
