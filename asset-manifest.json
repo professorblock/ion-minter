@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/ion-minter/static/css/main.5e48207e.css",
-    "main.js": "/ion-minter/static/js/main.6df03df3.js",
-    "static/js/453.ad0c6247.chunk.js": "/ion-minter/static/js/453.ad0c6247.chunk.js",
-    "static/media/coin-logo.svg": "/ion-minter/static/media/coin-logo.be193ced0ab3174318408cbda298ed18.svg",
-    "static/media/coin-logo-hover.svg": "/ion-minter/static/media/coin-logo-hover.bcb4f579e3f942583b36fc7a21e6da02.svg",
-    "static/media/pen.svg": "/ion-minter/static/media/pen.3404acd4e44d6392d17c007d8bd690ed.svg",
-    "index.html": "/ion-minter/index.html",
-    "static/media/link-open.svg": "/ion-minter/static/media/link-open.020d15772eeb2a3b7d8325dac8b8ff3e.svg",
-    "static/media/error-notification.svg": "/ion-minter/static/media/error-notification.7524ee060a6f090e4ff634c680621f88.svg",
-    "static/media/copy.svg": "/ion-minter/static/media/copy.4f00c4ea8406c876d91eea345cfa1764.svg",
-    "static/media/bullet.svg": "/ion-minter/static/media/bullet.0c7500ce7e96e727958df370b60807d0.svg",
-    "main.5e48207e.css.map": "/ion-minter/static/css/main.5e48207e.css.map",
-    "main.6df03df3.js.map": "/ion-minter/static/js/main.6df03df3.js.map",
-    "453.ad0c6247.chunk.js.map": "/ion-minter/static/js/453.ad0c6247.chunk.js.map"
+    "main.css": "/static/css/main.5e48207e.css",
+    "main.js": "/static/js/main.d7548afe.js",
+    "static/js/453.ad0c6247.chunk.js": "/static/js/453.ad0c6247.chunk.js",
+    "static/media/coin-logo.svg": "/static/media/coin-logo.be193ced0ab3174318408cbda298ed18.svg",
+    "static/media/coin-logo-hover.svg": "/static/media/coin-logo-hover.bcb4f579e3f942583b36fc7a21e6da02.svg",
+    "static/media/pen.svg": "/static/media/pen.3404acd4e44d6392d17c007d8bd690ed.svg",
+    "static/media/link-open.svg": "/static/media/link-open.020d15772eeb2a3b7d8325dac8b8ff3e.svg",
+    "index.html": "/index.html",
+    "static/media/error-notification.svg": "/static/media/error-notification.7524ee060a6f090e4ff634c680621f88.svg",
+    "static/media/copy.svg": "/static/media/copy.4f00c4ea8406c876d91eea345cfa1764.svg",
+    "static/media/bullet.svg": "/static/media/bullet.0c7500ce7e96e727958df370b60807d0.svg",
+    "main.5e48207e.css.map": "/static/css/main.5e48207e.css.map",
+    "main.d7548afe.js.map": "/static/js/main.d7548afe.js.map",
+    "453.ad0c6247.chunk.js.map": "/static/js/453.ad0c6247.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5e48207e.css",
-    "static/js/main.6df03df3.js"
+    "static/js/main.d7548afe.js"
   ]
 }
