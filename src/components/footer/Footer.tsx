@@ -36,14 +36,14 @@ export const Footer = () => {
             pt: { xs: 7, md: 9 },
             pb: { xs: 4, md: 5 },
           }}>
-          {/* Top row — brand block + 2 columns, distributed across full width */}
+          {/* Top row — same width grid as the sub-footer below.
+              Brand block on left, two equal-width columns on right. */}
           <Box
             sx={{
               display: "grid",
-              // brand wider, columns farther right (less centered feel)
-              gridTemplateColumns: { xs: "1fr", md: "2.4fr 1fr 1fr" },
+              gridTemplateColumns: { xs: "1fr", md: "2.1fr 1fr 1fr" },
               alignItems: "start",
-              columnGap: { xs: 0, md: 10 },
+              columnGap: { xs: 0, md: 8 },
               rowGap: { xs: 5, md: 4 },
               pb: { xs: 5, md: 6 },
             }}>
@@ -138,15 +138,15 @@ export const Footer = () => {
             <FooterGroup title="Community" items={community} />
           </Box>
 
-          {/* Sub-footer: copyright (left) | community line (center, fills space) | socials (right) */}
+          {/* Sub-footer — restored to original 1fr auto 1fr layout */}
           <Box
             sx={{
               pt: { xs: 3.5, md: 4 },
               borderTop: "1px solid rgba(255,255,255,0.08)",
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "auto 1fr auto" },
+              gridTemplateColumns: { xs: "1fr", md: "1fr auto 1fr" },
               alignItems: "center",
-              gap: { xs: 2, md: 3 },
+              gap: { xs: 2, md: 2.5 },
             }}>
             <Typography
               sx={{

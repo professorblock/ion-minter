@@ -41,9 +41,11 @@ export const DataRow: React.FC<DataRowProps> = ({
   regularAddress,
 }) => {
   return (
-    <Box>
-      <RowTitle variant="h6">{children ? children : title}</RowTitle>
+    <Box sx={{ width: "100%" }}>
+      {/* RowContent is now a horizontal flex: title on left, value on right */}
       <RowContent>
+        <RowTitle variant="h6">{children ? children : title}</RowTitle>
+
         <RowValueDisplayer>
           <LoadingContainer loading={dataLoading} loaderHeight="50%">
             <RowValueSection hasButton={hasButton}>
@@ -55,7 +57,16 @@ export const DataRow: React.FC<DataRowProps> = ({
                   regularAddress={regularAddress}
                 />
               ) : (
-                <Typography>{value || "-"}</Typography>
+                <Typography
+                  sx={{
+                    fontSize: 13,
+                    color: "#FFFFFF",
+                    fontWeight: 500,
+                    wordBreak: "break-word",
+                    textAlign: "right",
+                  }}>
+                  {value || "-"}
+                </Typography>
               )}
             </RowValueSection>
             {actions && (
@@ -68,20 +79,21 @@ export const DataRow: React.FC<DataRowProps> = ({
             )}
           </LoadingContainer>
         </RowValueDisplayer>
-
-        {description && (
-          <AppHeading
-            text={description}
-            variant="h6"
-            marginTop={4}
-            fontSize={12}
-            fontWeight={500}
-            marginLeft={20}
-            color="rgba(114,138,150,0.7)"
-          />
-        )}
-        {!dataLoading && <MessageRenderer message={message} />}
       </RowContent>
+
+      {/* Description sits BELOW the row, full width, muted */}
+      {description && (
+        <AppHeading
+          text={description}
+          variant="h6"
+          marginTop={4}
+          marginBottom={8}
+          fontSize={11.5}
+          fontWeight={400}
+          color="rgba(255,255,255,0.38)"
+        />
+      )}
+      {!dataLoading && <MessageRenderer message={message} />}
     </Box>
   );
 };
