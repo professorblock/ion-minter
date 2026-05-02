@@ -20,7 +20,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <MakeStylesProvider theme={theme}>
         <CssBaseline />
-        <Router basename="/ion-minter">
+        <Router basename="/">
           <SnackbarProvider maxSnack={3}>
             <TonConnectUIProvider
               manifestUrl="https://professorblock.github.io/ion-minter/tonconnect-manifest.json"
