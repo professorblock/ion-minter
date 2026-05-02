@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ion-minter/static/css/main.98a4c974.css",
-    "main.js": "/ion-minter/static/js/main.c3676f9b.js",
+    "main.css": "/ion-minter/static/css/main.5e48207e.css",
+    "main.js": "/ion-minter/static/js/main.6df03df3.js",
     "static/js/453.ad0c6247.chunk.js": "/ion-minter/static/js/453.ad0c6247.chunk.js",
     "static/media/coin-logo.svg": "/ion-minter/static/media/coin-logo.be193ced0ab3174318408cbda298ed18.svg",
     "static/media/coin-logo-hover.svg": "/ion-minter/static/media/coin-logo-hover.bcb4f579e3f942583b36fc7a21e6da02.svg",
@@ -11,12 +11,12 @@
     "static/media/error-notification.svg": "/ion-minter/static/media/error-notification.7524ee060a6f090e4ff634c680621f88.svg",
     "static/media/copy.svg": "/ion-minter/static/media/copy.4f00c4ea8406c876d91eea345cfa1764.svg",
     "static/media/bullet.svg": "/ion-minter/static/media/bullet.0c7500ce7e96e727958df370b60807d0.svg",
-    "main.98a4c974.css.map": "/ion-minter/static/css/main.98a4c974.css.map",
-    "main.c3676f9b.js.map": "/ion-minter/static/js/main.c3676f9b.js.map",
+    "main.5e48207e.css.map": "/ion-minter/static/css/main.5e48207e.css.map",
+    "main.6df03df3.js.map": "/ion-minter/static/js/main.6df03df3.js.map",
     "453.ad0c6247.chunk.js.map": "/ion-minter/static/js/453.ad0c6247.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.98a4c974.css",
-    "static/js/main.c3676f9b.js"
+    "static/css/main.5e48207e.css",
+    "static/js/main.6df03df3.js"
   ]
 }
