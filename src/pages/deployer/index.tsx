@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Address } from "ton";
-import { Box, Fade, Typography } from "@mui/material";
+import { Box, Button, Fade, Typography } from "@mui/material";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import { jettonDeployController, JettonDeployParams } from "lib/deploy-controller";
 import WalletConnection from "services/wallet-connection";
 import { createDeployParams } from "lib/utils";
@@ -26,19 +28,25 @@ async function fetchDecimalsOffchain(url: string): Promise<{ decimals?: string }
   return res.json();
 }
 
-const STATS = [
-  "30M+ Users",
-  "ION Mainnet Live",
-  "0 Gas for Regular TXs",
-  "Jetton Standard",
-  "Open Source",
-  "100% On-Chain",
-  "30M+ Users",
-  "ION Mainnet Live",
-  "0 Gas for Regular TXs",
-  "Jetton Standard",
-  "Open Source",
-  "100% On-Chain",
+/* ================================================================
+   Status pills shown beneath the hero CTAs (recent mint activity).
+   Arena reference: 3 pills with colored dots.
+   ================================================================ */
+const RECENT_ACTIVITY = [
+  { label: "Minted", token: "PEPE", time: "2 mins ago", dot: "#34D399" },
+  { label: "Minted", token: "DOGE", time: "5 mins ago", dot: "#60A5FA" },
+  { label: "Deployed", token: "ION-X", time: "12 mins ago", dot: "#A78BFA" },
+];
+
+/* ================================================================
+   Stats shown in the dark glass card under the hero.
+   Arena reference: 30M+ / 0 Gas / 0.3s / 100%.
+   ================================================================ */
+const HERO_STATS = [
+  { value: "30M+", label: "Active Users" },
+  { value: "0 Gas", label: "Regular TXs" },
+  { value: "0.3s", label: "Finality Time" },
+  { value: "100%", label: "On-Chain" },
 ];
 
 function DeployerPage() {
@@ -106,6 +114,11 @@ function DeployerPage() {
     }
   }
 
+  /* Smooth scroll helper for "Start Building" CTA */
+  const scrollToForm = () => {
+    document.getElementById("token-deployment")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <Screen>
       <ScreenContent removeBackground>
@@ -116,291 +129,261 @@ function DeployerPage() {
               minHeight: "100vh",
               color: "#fff",
               overflow: "hidden",
-              pt: { xs: 4, md: 8 },
+              pt: { xs: 4, md: 6 },
               pb: { xs: 8, md: 14 },
             }}>
-            <Box
-              sx={{
-                position: "fixed",
-                inset: 0,
-                zIndex: 0,
-                overflow: "hidden",
-                background: "#000000",
-                pointerEvents: "none",
-              }}>
-              <Box
-                className="bg-grid mask-radial"
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: 0.3,
-                  mixBlendMode: "overlay",
-                }}
-              />
-              <Box
-                className="animate-pulse-slow"
-                sx={{
-                  position: "absolute",
-                  top: "-20%",
-                  left: "-10%",
-                  width: "60vw",
-                  height: "60vw",
-                  borderRadius: "50%",
-                  background: "rgba(37,99,235,0.10)",
-                  filter: "blur(150px)",
-                  mixBlendMode: "screen",
-                }}
-              />
-              <Box
-                className="animate-pulse-slow"
-                sx={{
-                  position: "absolute",
-                  bottom: "-20%",
-                  right: "-10%",
-                  width: "50vw",
-                  height: "50vw",
-                  borderRadius: "50%",
-                  background: "rgba(79,70,229,0.10)",
-                  filter: "blur(120px)",
-                  mixBlendMode: "screen",
-                  animationDelay: "3s",
-                }}
-              />
-              <Box
-                className="animate-pulse-slow"
-                sx={{
-                  position: "absolute",
-                  top: "20%",
-                  right: "20%",
-                  width: "30vw",
-                  height: "30vw",
-                  borderRadius: "50%",
-                  background: "rgba(147,51,234,0.10)",
-                  filter: "blur(100px)",
-                  mixBlendMode: "screen",
-                  animationDelay: "1.5s",
-                }}
-              />
-            </Box>
-
+            {/* ========= HERO ========= */}
             <Box
               sx={{
                 position: "relative",
                 zIndex: 1,
-                mt: { xs: 3, md: 5 },
-                mb: 8,
+                mt: { xs: 4, md: 8 },
                 textAlign: "center",
               }}>
-              {" "}
+              {/* "V2 INFRASTRUCTURE LIVE" pill */}
               <Box
                 sx={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "8px",
-                  background: "rgba(59,130,246,0.10)",
-                  border: "1px solid rgba(59,130,246,0.20)",
+                  gap: 1,
+                  background: "rgba(96,165,250,0.08)",
+                  border: "1px solid rgba(96,165,250,0.22)",
                   borderRadius: 999,
                   px: 2,
-                  py: 0.8,
+                  py: 0.85,
                   mb: 4,
-                  boxShadow: "0 0 10px rgba(59,130,246,0.2)",
+                  boxShadow: "0 0 24px rgba(96,165,250,0.18)",
                   backdropFilter: "blur(12px)",
                 }}>
-                <Typography sx={{ fontSize: 13, lineHeight: 1 }}>⚡</Typography>
+                <Box
+                  className="status-dot"
+                  sx={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    background: "#60A5FA",
+                    boxShadow: "0 0 10px rgba(96,165,250,0.9)",
+                  }}
+                />
                 <Typography
                   sx={{
-                    fontSize: 11,
-                    fontWeight: 800,
-                    color: "#60A5FA",
-                    letterSpacing: "0.14em",
+                    fontSize: 10.5,
+                    fontWeight: 700,
+                    color: "#93C5FD",
+                    letterSpacing: "0.18em",
                     textTransform: "uppercase",
                   }}>
-                  LIVE ON ION MAINNET
+                  V2 Infrastructure Live
                 </Typography>
               </Box>
+
+              {/* Heading */}
               <ScreenHeading variant="h1">
                 Launch Tokens
                 <br />
-                <Box component="span" sx={{ display: "inline-block" }}>
-                  <Box component="span" sx={{ color: "#FFFFFF" }}>
-                    on{" "}
-                  </Box>
-                  <Box component="span" className="g">
-                    ION.
-                  </Box>
-                </Box>
-                <Box
-                  component="span"
-                  sx={{
-                    display: "block",
-                    mt: { xs: 1.5, md: 2 },
-                    fontSize: { xs: 18, md: 24 },
-                    lineHeight: 1.15,
-                    fontWeight: 700,
-                    letterSpacing: "-0.03em",
-                    color: "rgba(255,255,255,0.92)",
-                    textShadow: "0 0 22px rgba(96,165,250,0.18)",
-                  }}>
-                  <Box></Box>
-                </Box>
+                <span className="g">At Lightning Speed.</span>
               </ScreenHeading>
-              <Box sx={{ mt: { xs: 1.5, md: 2.2 }, textAlign: "center" }}>
-                <Box
-                  sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    background: "rgba(59,130,246,0.10)",
-                    border: "1px solid rgba(59,130,246,0.20)",
-                    borderRadius: 999,
-                    px: 2,
-                    py: 0.8,
-                    boxShadow: "0 0 10px rgba(59,130,246,0.2)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
-                  }}>
-                  <Box
-                    sx={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "#60A5FA",
-                      boxShadow: "0 0 12px rgba(96,165,250,0.7)",
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      fontSize: 11,
-                      fontWeight: 800,
-                      color: "#60A5FA",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      lineHeight: 1,
-                    }}>
-                    At Lightning Speed
-                  </Typography>
-                </Box>
-              </Box>
+
+              {/* Subheading */}
               <Typography
                 sx={{
                   mt: 3,
-                  maxWidth: 760,
+                  maxWidth: 720,
                   mx: "auto",
-                  color: "rgba(255,255,255,0.66)",
-                  fontSize: { xs: 17, md: 22 },
-                  lineHeight: { xs: "30px", md: "38px" },
+                  color: "rgba(255,255,255,0.62)",
+                  fontSize: { xs: 15, md: 17 },
+                  lineHeight: { xs: "26px", md: "28px" },
                   fontWeight: 400,
+                  px: 2,
                 }}>
                 The industry-leading token generation engine for the{" "}
-                <Box component="span" sx={{ color: "#FFFFFF", fontWeight: 600 }}>
+                <Box component="span" sx={{ color: "#fff", fontWeight: 600 }}>
                   Ice Open Network
                 </Box>
                 . Deploy instantly with zero code, zero friction, and near-zero gas.
               </Typography>
-            </Box>
 
-            <Box
-              sx={{
-                my: 5,
-                overflow: "hidden",
-                position: "relative",
-                zIndex: 1,
-                maxWidth: 900,
-                mx: "auto",
-                "&::before, &::after": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  width: 80,
-                  zIndex: 2,
-                },
-                "&::before": {
-                  left: 0,
-                  background: "linear-gradient(90deg, #050505, transparent)",
-                },
-                "&::after": {
-                  right: 0,
-                  background: "linear-gradient(-90deg, #050505, transparent)",
-                },
-              }}>
+              {/* Two CTAs */}
               <Box
                 sx={{
-                  display: "inline-flex",
-                  gap: 2,
-                  whiteSpace: "nowrap",
-                  width: "max-content",
-                  animation: "ticker 22s linear infinite",
+                  mt: 4.5,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 1.5,
+                  flexWrap: "wrap",
                 }}>
-                {STATS.map((s, i) => (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 18 }} />}
+                  onClick={scrollToForm}
+                  sx={{
+                    px: 3,
+                    py: 1.4,
+                    fontSize: 14.5,
+                    fontWeight: 600,
+                  }}>
+                  Start Building
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  endIcon={<OpenInNewRoundedIcon sx={{ fontSize: 16 }} />}
+                  href="https://ice.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    px: 3,
+                    py: 1.4,
+                    fontSize: 14.5,
+                    fontWeight: 500,
+                  }}>
+                  Explore Network
+                </Button>
+              </Box>
+
+              {/* Recent activity status pills */}
+              <Box
+                sx={{
+                  mt: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 1.25,
+                  flexWrap: "wrap",
+                  px: 2,
+                }}>
+                {RECENT_ACTIVITY.map((item, i) => (
                   <Box
                     key={i}
                     sx={{
-                      display: "flex",
+                      display: "inline-flex",
                       alignItems: "center",
-                      gap: 1.2,
-                      color: "rgba(255,255,255,0.55)",
-                      background: "rgba(255,255,255,0.04)",
-                      px: 2,
-                      py: 1,
+                      gap: 1,
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.07)",
                       borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      px: 1.5,
+                      py: 0.7,
                     }}>
                     <Box
+                      className="status-dot"
                       sx={{
                         width: 6,
                         height: 6,
                         borderRadius: "50%",
-                        background: i % 3 === 0 ? "#10B981" : i % 3 === 1 ? "#3B82F6" : "#8B5CF6",
+                        background: item.dot,
+                        boxShadow: `0 0 8px ${item.dot}`,
                       }}
                     />
                     <Typography
                       sx={{
-                        fontSize: 12,
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.55)",
                         fontWeight: 500,
-                        color: "rgba(255,255,255,0.72)",
                       }}>
-                      {s}
+                      {item.label}:
+                    </Typography>
+                    <Box
+                      sx={{
+                        fontFamily: "'SF Mono', Menlo, Monaco, 'Courier New', monospace",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "rgba(255,255,255,0.92)",
+                        background: "rgba(255,255,255,0.06)",
+                        borderRadius: 0.75,
+                        px: 0.75,
+                        py: 0.15,
+                        letterSpacing: "0.02em",
+                      }}>
+                      {item.token}
+                    </Box>
+                    <Typography
+                      sx={{
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.45)",
+                        fontWeight: 500,
+                      }}>
+                      {item.time}
                     </Typography>
                   </Box>
                 ))}
               </Box>
             </Box>
 
-            <Box sx={{ position: "relative", zIndex: 1, mt: 8 }}>
+            {/* ========= STATS BAR ========= */}
+            <Box
+              sx={{
+                position: "relative",
+                zIndex: 1,
+                mt: { xs: 5, md: 7 },
+                maxWidth: 1100,
+                mx: "auto",
+                px: { xs: 1, md: 0 },
+              }}>
+              <Box
+                className="glass-card"
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4, 1fr)" },
+                  gap: { xs: 3, md: 0 },
+                  py: { xs: 4, md: 4.5 },
+                  px: { xs: 3, md: 4 },
+                  borderRadius: "20px !important",
+                }}>
+                {HERO_STATS.map((stat, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      textAlign: "center",
+                      borderRight: {
+                        xs: "none",
+                        md: i < HERO_STATS.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                      },
+                    }}>
+                    <Typography
+                      sx={{
+                        fontSize: { xs: 30, md: 38 },
+                        fontWeight: 700,
+                        letterSpacing: "-0.04em",
+                        color: "#FFFFFF",
+                        lineHeight: 1.05,
+                      }}>
+                      {stat.value}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        mt: 1,
+                        fontSize: 10.5,
+                        fontWeight: 600,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "#60A5FA",
+                      }}>
+                      {stat.label}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+
+            {/* ========= TOKEN DEPLOYMENT (form section) =========
+                Phase B will rebuild the heading area; the form below
+                is preserved as-is so existing wallet/contract logic
+                keeps working. */}
+            <Box
+              id="token-deployment"
+              sx={{ position: "relative", zIndex: 1, mt: { xs: 10, md: 14 } }}>
               <FormWrapper sx={{ maxWidth: 1280, mx: "auto" }}>
                 <SubHeadingWrapper>
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: -100,
-                      right: -80,
-                      width: 260,
-                      height: 260,
-                      background: "rgba(37,99,235,0.10)",
-                      filter: "blur(100px)",
-                      borderRadius: "50%",
-                      pointerEvents: "none",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      bottom: -120,
-                      left: -90,
-                      width: 280,
-                      height: 280,
-                      background: "rgba(79,70,229,0.10)",
-                      filter: "blur(110px)",
-                      borderRadius: "50%",
-                      pointerEvents: "none",
-                    }}
-                  />
                   <Box sx={{ position: "relative", zIndex: 1 }}>
                     <Typography
                       sx={{
-                        fontSize: 34,
-                        fontWeight: 800,
+                        fontSize: 28,
+                        fontWeight: 700,
                         mb: 1,
                         letterSpacing: "-0.03em",
                       }}>
@@ -424,15 +407,7 @@ function DeployerPage() {
                   </Box>
                 </SubHeadingWrapper>
 
-                <Box
-                  sx={{
-                    position: "relative",
-                    zIndex: 1,
-                    mt: { xs: 3, md: 5 },
-                    mb: 8,
-                    textAlign: "center",
-                  }}>
-                  {" "}
+                <Box sx={{ width: { xs: "100%", lg: 380 }, flexShrink: 0 }}>
                   <Description />
                 </Box>
               </FormWrapper>
@@ -446,41 +421,34 @@ function DeployerPage() {
 
 export { DeployerPage };
 
+/* ================================================================
+   Launch Summary side panel — kept from previous version.
+   Will be restyled in Phase B.
+   ================================================================ */
 function Description() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
       <StyledDescription
         sx={{
-          borderRadius: "32px",
-          p: 4,
+          borderRadius: "24px",
+          p: 3.5,
           background:
-            "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          border: "1px solid rgba(255,255,255,0.10)",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.28)",
+            "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)",
+          border: "1px solid rgba(255,255,255,0.07)",
         }}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 24,
-            right: 24,
-            height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(96,165,250,0.5), transparent)",
-          }}
-        />
         <Typography
           sx={{
-            fontSize: 11,
-            fontWeight: 800,
-            letterSpacing: "0.16em",
+            fontSize: 10.5,
+            fontWeight: 700,
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "rgba(255,255,255,0.45)",
+            color: "rgba(255,255,255,0.5)",
             mb: 3,
           }}>
           Launch Summary
         </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
           <Box
             sx={{
               display: "flex",
@@ -489,27 +457,18 @@ function Description() {
               pb: 2,
               borderBottom: "1px solid rgba(255,255,255,0.06)",
             }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Network</Typography>
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 1,
-                px: 1.5,
-                py: 0.7,
-                borderRadius: 2,
-                background: "rgba(255,255,255,0.05)",
-              }}>
+            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>Network</Typography>
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}>
               <Box
                 sx={{
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  background: "#10B981",
-                  boxShadow: "0 0 10px rgba(16,185,129,0.6)",
+                  background: "#34D399",
+                  boxShadow: "0 0 8px rgba(52,211,153,0.6)",
                 }}
               />
-              <Typography sx={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
                 ION Mainnet
               </Typography>
             </Box>
@@ -523,8 +482,10 @@ function Description() {
               pb: 2,
               borderBottom: "1px solid rgba(255,255,255,0.06)",
             }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Standard</Typography>
-            <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>Jetton</Typography>
+            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>Standard</Typography>
+            <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
+              Jetton (TIP-3)
+            </Typography>
           </Box>
 
           <Box
@@ -532,48 +493,106 @@ function Description() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "flex-start",
+              pb: 2.5,
             }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>
               Estimated Fee
             </Typography>
             <Box sx={{ textAlign: "right" }}>
-              <Typography sx={{ fontSize: 24, fontWeight: 800, color: "#34D399", lineHeight: 1.1 }}>
+              <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#34D399", lineHeight: 1.1 }}>
                 0.05 ION
               </Typography>
-              <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
-                ~ network dependent
+              <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.35)", mt: 0.25 }}>
+                ~$0.001 USD
               </Typography>
             </Box>
           </Box>
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{
+              mt: 0.5,
+              py: 1.4,
+              borderRadius: "12px",
+              fontWeight: 600,
+              fontSize: 14,
+            }}>
+            Deploy to Mainnet
+          </Button>
+
+          <Typography
+            sx={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.4)",
+              textAlign: "center",
+              lineHeight: 1.5,
+              mt: 0.5,
+            }}>
+            Smart contract deployment is immutable. Please verify all
+            <br />
+            details before confirming the transaction.
+          </Typography>
         </Box>
       </StyledDescription>
 
-      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-        <StyledDescription
-          sx={{
-            borderRadius: "24px",
-            p: 2.5,
-          }}>
-          <Typography sx={{ fontSize: 22, mb: 1 }}>🛡️</Typography>
-          <Typography sx={{ fontSize: 15, fontWeight: 700, color: "#fff", mb: 0.5 }}>
+      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+        <StyledDescription sx={{ borderRadius: "16px", p: 2.5 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: "10px",
+              background: "rgba(96,165,250,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 1.25,
+            }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z"
+                stroke="#60A5FA"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Box>
+          <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff", mb: 0.4 }}>
             Audited
           </Typography>
-          <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.42)", lineHeight: 1.5 }}>
-            Secure deployment flow.
+          <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
+            100% secure contracts.
           </Typography>
         </StyledDescription>
 
-        <StyledDescription
-          sx={{
-            borderRadius: "24px",
-            p: 2.5,
-          }}>
-          <Typography sx={{ fontSize: 22, mb: 1 }}>🔥</Typography>
-          <Typography sx={{ fontSize: 15, fontWeight: 700, color: "#fff", mb: 0.5 }}>
-            Mainnet Ready
+        <StyledDescription sx={{ borderRadius: "16px", p: 2.5 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: "10px",
+              background: "rgba(52,211,153,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 1.25,
+            }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2c0 4-3 6-3 9a3 3 0 006 0c0-3-3-5-3-9zM7 13c0 3 2 7 5 7s5-4 5-7"
+                stroke="#34D399"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Box>
+          <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff", mb: 0.4 }}>
+            Burnable
           </Typography>
-          <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.42)", lineHeight: 1.5 }}>
-            Built for live launches.
+          <Typography sx={{ fontSize: 11, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
+            Deflationary mechanisms.
           </Typography>
         </StyledDescription>
       </Box>
