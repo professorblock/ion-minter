@@ -6,7 +6,9 @@ const ROUTES = {
   jettonId: "/jetton/:id",
 };
 
-const APP_GRID = 1156;
+// Bumped from 1156 → 1280 so page content matches the footer width
+// and aligns with the Arena reference grid.
+const APP_GRID = 1280;
 const LOCAL_STORAGE_PROVIDER = "wallet_provider";
 const APP_DISPLAY_NAME = "ION Hub";
 const JETTON_DEPLOYER_CONTRACTS_GITHUB = "https://github.com/professorblock/ion-minter";

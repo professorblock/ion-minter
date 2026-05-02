@@ -6,13 +6,13 @@ export const RowWrapper = styled(Box)(({ theme }) => ({
   alignItems: "flex-start",
   gap: 12,
   padding: `${theme.spacing(1.5)} 0`,
-  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  borderBottom: "1px solid rgba(255,255,255,0.06)",
   "&:last-child": { borderBottom: "none" },
 }));
 
 export const RowLabel = styled(Typography)(() => ({
   fontSize: 13,
-  color: "rgba(255,255,255,0.4)",
+  color: "rgba(255,255,255,0.45)",
   fontFamily: "'Inter', sans-serif",
   fontWeight: 500,
   flexShrink: 0,
@@ -29,21 +29,22 @@ export const RowValue = styled(Typography)(() => ({
   lineHeight: 1.5,
 }));
 
+/* Updated from old cyan #00D4FF → blue #60A5FA matching our theme */
 export const RowLink = styled(Box)(() => ({
   fontSize: 13,
-  color: "#00D4FF",
+  color: "#60A5FA",
   fontFamily: "'Inter', sans-serif",
   fontWeight: 500,
   cursor: "pointer",
   textAlign: "right",
   wordBreak: "break-all",
   transition: "color 180ms ease",
-  "&:hover": { color: "#7C3AFF" },
+  "&:hover": { color: "#A78BFA" },
 }));
 
 export const RowTitle = styled(Typography)(() => ({
   fontSize: 13,
-  color: "rgba(255,255,255,0.4)",
+  color: "rgba(255,255,255,0.45)",
   fontFamily: "'Inter', sans-serif",
   fontWeight: 500,
   flexShrink: 0,
@@ -58,7 +59,7 @@ export const RowContent = styled(Box)(() => ({
   width: "100%",
   gap: 12,
   padding: "12px 0",
-  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  borderBottom: "1px solid rgba(255,255,255,0.06)",
   "&:last-child": { borderBottom: "none" },
 }));
 
@@ -105,10 +106,10 @@ export const RowMessage = styled(Typography)<RowMessageProps>(({ type }) => ({
   wordBreak: "break-word",
   color:
     type === "warning"
-      ? "#FFB74D"
+      ? "#FBBF24"
       : type === "error"
-      ? "#F44336"
+      ? "#F87171"
       : type === "success"
-      ? "#66BB6A"
+      ? "#34D399"
       : "rgba(255,255,255,0.5)",
 }));

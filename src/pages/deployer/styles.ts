@@ -1,6 +1,5 @@
 import { Box, styled, Typography } from "@mui/material";
 
-/* Glass card surface used for the form panel and side panel */
 const glassCard = {
   background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)",
   backdropFilter: "blur(18px)",
@@ -27,18 +26,16 @@ export const PageInner = styled(Box)(({ theme }) => ({
   maxWidth: 1280,
   margin: "0 auto",
   padding: "0 32px",
-  [theme.breakpoints.down("md")]: {
-    padding: "0 18px",
-  },
+  [theme.breakpoints.down("md")]: { padding: "0 18px" },
 }));
 
 export const HeroSection = styled(Box)(({ theme }) => ({
-  paddingTop: theme.spacing(8),
-  paddingBottom: theme.spacing(6),
+  paddingTop: theme.spacing(10),
+  paddingBottom: theme.spacing(8),
   textAlign: "center",
   [theme.breakpoints.down("md")]: {
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(5),
   },
 }));
 
@@ -63,16 +60,20 @@ export const EyebrowDot = styled(Box)(() => ({
   boxShadow: "0 0 10px rgba(96,165,250,0.9)",
 }));
 
-/* Hero "Launch Tokens / At Lightning Speed." heading.
-   The .g child is the gradient text (blue → indigo → purple). */
+/* ================================================================
+   Hero heading — bumped substantially to match Arena's visual mass.
+   Two lines: "Launch Tokens" / "on ION." with .g for gradient on ION.
+   Range: 56px (mobile) → 120px (desktop).
+   ================================================================ */
 export const ScreenHeading = styled(Typography)(() => ({
   fontWeight: 800,
   color: "#FFFFFF",
-  fontSize: "clamp(2.6rem, 6.5vw, 5rem)",
+  fontSize: "clamp(3.5rem, 9vw, 7.5rem)",
   fontFamily: "'Inter', sans-serif",
-  letterSpacing: "-0.05em",
-  lineHeight: 0.98,
+  letterSpacing: "-0.055em",
+  lineHeight: 0.96,
   textWrap: "balance" as any,
+  margin: 0,
   "& .g": {
     background: "linear-gradient(135deg, #60A5FA 0%, #818CF8 50%, #A78BFA 100%)",
     WebkitBackgroundClip: "text",
@@ -84,44 +85,21 @@ export const ScreenHeading = styled(Typography)(() => ({
 
 export const HeroDescription = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(3),
-  maxWidth: 720,
+  maxWidth: 760,
   marginLeft: "auto",
   marginRight: "auto",
   color: "rgba(255,255,255,0.62)",
-  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+  fontSize: "clamp(1rem, 1.2vw, 1.15rem)",
   lineHeight: 1.7,
   fontWeight: 400,
 }));
 
-/* The dark stat card under the hero */
-export const StatsCard = styled(Box)(({ theme }) => ({
-  ...glassCard,
-  marginTop: theme.spacing(7),
-  display: "grid",
-  gridTemplateColumns: "repeat(4, 1fr)",
-  gap: 0,
-  padding: theme.spacing(4.5, 4),
-  borderRadius: "20px",
-  [theme.breakpoints.down("md")]: {
-    gridTemplateColumns: "1fr 1fr",
-    gap: theme.spacing(3),
-    padding: theme.spacing(4, 3),
-  },
-}));
-
-export const StatItem = styled(Box)(() => ({
-  textAlign: "center",
-}));
-
-/* Two-column form section wrapper */
 export const FormWrapper = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "minmax(0, 1.05fr) minmax(340px, 0.95fr)",
   gap: 24,
   alignItems: "start",
-  [theme.breakpoints.down("lg")]: {
-    gridTemplateColumns: "1fr",
-  },
+  [theme.breakpoints.down("lg")]: { gridTemplateColumns: "1fr" },
 }));
 
 export const SubHeadingWrapper = styled(Box)(({ theme }) => ({

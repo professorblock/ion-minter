@@ -3,6 +3,9 @@ import { Address } from "ton";
 import { Box, Button, Fade, Typography } from "@mui/material";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
+import ShieldRoundedIcon from "@mui/icons-material/ShieldRounded";
+import HubRoundedIcon from "@mui/icons-material/HubRounded";
 import { jettonDeployController, JettonDeployParams } from "lib/deploy-controller";
 import WalletConnection from "services/wallet-connection";
 import { createDeployParams } from "lib/utils";
@@ -14,39 +17,53 @@ import { FormWrapper, ScreenHeading, StyledDescription, SubHeadingWrapper } from
 import { Screen, ScreenContent } from "components/Screen";
 import analytics, { AnalyticsAction, AnalyticsCategory } from "services/analytics";
 import { getUrlParam, toDecimalsBN } from "utils";
-import { offchainFormSpec, onchainFormSpec } from "./data";
-import { Form } from "components/form";
+import { TokenDeploymentForm, TokenDeploymentFormValues } from "components/tokenDeploymentForm";
 import { useNavigatePreserveQuery } from "lib/hooks/useNavigatePreserveQuery";
 import { useTonAddress, useTonConnectUI } from "@ion-gateway/ui-react";
 
 const DEFAULT_DECIMALS = 9;
 const isOffchainInternal = getUrlParam("offchainINTERNAL") !== null;
-const formSpec = isOffchainInternal ? offchainFormSpec : onchainFormSpec;
 
 async function fetchDecimalsOffchain(url: string): Promise<{ decimals?: string }> {
   const res = await fetch(url);
   return res.json();
 }
 
-/* ================================================================
-   Status pills shown beneath the hero CTAs (recent mint activity).
-   Arena reference: 3 pills with colored dots.
-   ================================================================ */
 const RECENT_ACTIVITY = [
   { label: "Minted", token: "PEPE", time: "2 mins ago", dot: "#34D399" },
   { label: "Minted", token: "DOGE", time: "5 mins ago", dot: "#60A5FA" },
   { label: "Deployed", token: "ION-X", time: "12 mins ago", dot: "#A78BFA" },
 ];
 
-/* ================================================================
-   Stats shown in the dark glass card under the hero.
-   Arena reference: 30M+ / 0 Gas / 0.3s / 100%.
-   ================================================================ */
 const HERO_STATS = [
-  { value: "30M+", label: "Active Users" },
-  { value: "0 Gas", label: "Regular TXs" },
+  { value: "30M+", label: "Users" },
+  { value: "~0 Gas", label: "Regular TXs" },
   { value: "0.3s", label: "Finality Time" },
   { value: "100%", label: "On-Chain" },
+];
+
+const FEATURE_CARDS = [
+  {
+    icon: <BoltRoundedIcon sx={{ fontSize: 24, color: "#FBBF24" }} />,
+    iconBg: "rgba(251,191,36,0.10)",
+    title: "Sub-Second Finality",
+    description:
+      "Experience unparalleled speed. Transactions on ION are confirmed in milliseconds, providing a seamless user experience.",
+  },
+  {
+    icon: <ShieldRoundedIcon sx={{ fontSize: 24, color: "#60A5FA" }} />,
+    iconBg: "rgba(96,165,250,0.10)",
+    title: "Bank-Grade Security",
+    description:
+      "Built on robust architecture. Smart contracts are rigorously audited and conform to the strict Jetton standard protocols.",
+  },
+  {
+    icon: <HubRoundedIcon sx={{ fontSize: 24, color: "#A78BFA" }} />,
+    iconBg: "rgba(167,139,250,0.10)",
+    title: "Open & Composable",
+    description:
+      "Built on ION's open framework. Compose with identity, storage, and the broader ecosystem out of the box.",
+  },
 ];
 
 function DeployerPage() {
@@ -56,15 +73,15 @@ function DeployerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigatePreserveQuery();
 
-  async function deployContract(data: any) {
+  async function deployContract(data: TokenDeploymentFormValues) {
     if (!walletAddress || !tonConnectUI) throw new Error("Wallet not connected");
 
-    let decimals = data.decimals;
-    if (data.offchainUri) {
+    let decimals: string | number = data.decimals;
+    if (isOffchainInternal && (data as any).offchainUri) {
       const res = await fetchDecimalsOffchain(
-        data.offchainUri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+        (data as any).offchainUri.replace("ipfs://", "https://ipfs.io/ipfs/"),
       );
-      decimals = res.decimals;
+      decimals = res.decimals ?? decimals;
     }
 
     const params: JettonDeployParams = {
@@ -74,14 +91,14 @@ function DeployerPage() {
         symbol: data.symbol,
         image: data.tokenImage,
         description: data.description,
-        decimals: parseInt(decimals).toFixed(0),
+        decimals: parseInt(decimals as string).toFixed(0),
       },
-      offchainUri: data.offchainUri,
+      offchainUri: (data as any).offchainUri,
       amountToMint: toDecimalsBN(data.mintAmount, decimals ?? DEFAULT_DECIMALS),
     };
 
     setIsLoading(true);
-    const deployParams = createDeployParams(params, data.offchainUri);
+    const deployParams = createDeployParams(params, (data as any).offchainUri);
     const contractAddress = new ContractDeployer().addressForContract(deployParams);
     const isDeployed = await WalletConnection.isContractDeployed(contractAddress);
 
@@ -114,7 +131,6 @@ function DeployerPage() {
     }
   }
 
-  /* Smooth scroll helper for "Start Building" CTA */
   const scrollToForm = () => {
     document.getElementById("token-deployment")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -132,15 +148,15 @@ function DeployerPage() {
               pt: { xs: 4, md: 6 },
               pb: { xs: 8, md: 14 },
             }}>
-            {/* ========= HERO ========= */}
+            {/* ============================================ HERO ============================================ */}
             <Box
               sx={{
                 position: "relative",
                 zIndex: 1,
-                mt: { xs: 4, md: 8 },
+                mt: { xs: 5, md: 10 },
                 textAlign: "center",
+                px: 2,
               }}>
-              {/* "V2 INFRASTRUCTURE LIVE" pill */}
               <Box
                 sx={{
                   display: "inline-flex",
@@ -149,9 +165,9 @@ function DeployerPage() {
                   background: "rgba(96,165,250,0.08)",
                   border: "1px solid rgba(96,165,250,0.22)",
                   borderRadius: 999,
-                  px: 2,
-                  py: 0.85,
-                  mb: 4,
+                  px: 2.25,
+                  py: 0.95,
+                  mb: { xs: 4, md: 5 },
                   boxShadow: "0 0 24px rgba(96,165,250,0.18)",
                   backdropFilter: "blur(12px)",
                 }}>
@@ -161,40 +177,51 @@ function DeployerPage() {
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: "#60A5FA",
-                    boxShadow: "0 0 10px rgba(96,165,250,0.9)",
+                    background: "#34D399",
+                    boxShadow: "0 0 10px rgba(52,211,153,0.9)",
                   }}
                 />
                 <Typography
                   sx={{
-                    fontSize: 10.5,
+                    fontSize: 11,
                     fontWeight: 700,
                     color: "#93C5FD",
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
                   }}>
-                  V2 Infrastructure Live
+                  Live on ION Mainnet
                 </Typography>
               </Box>
 
-              {/* Heading */}
               <ScreenHeading variant="h1">
                 Launch Tokens
                 <br />
-                <span className="g">At Lightning Speed.</span>
+                on <span className="g">ION.</span>
               </ScreenHeading>
 
-              {/* Subheading */}
+              {/* ====== Tagline — capitalized, italic, gradient (catchier) ====== */}
+              <Typography
+                className="gradient-text"
+                sx={{
+                  mt: { xs: 2, md: 2.5 },
+                  fontSize: { xs: 24, md: 38 },
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                  letterSpacing: "-0.035em",
+                  lineHeight: 1.1,
+                }}>
+                At Lightning Speed.
+              </Typography>
+
               <Typography
                 sx={{
-                  mt: 3,
-                  maxWidth: 720,
+                  mt: { xs: 3, md: 4 },
+                  maxWidth: 760,
                   mx: "auto",
                   color: "rgba(255,255,255,0.62)",
-                  fontSize: { xs: 15, md: 17 },
-                  lineHeight: { xs: "26px", md: "28px" },
+                  fontSize: { xs: 16, md: 18 },
+                  lineHeight: { xs: "27px", md: "30px" },
                   fontWeight: 400,
-                  px: 2,
                 }}>
                 The industry-leading token generation engine for the{" "}
                 <Box component="span" sx={{ color: "#fff", fontWeight: 600 }}>
@@ -203,58 +230,45 @@ function DeployerPage() {
                 . Deploy instantly with zero code, zero friction, and near-zero gas.
               </Typography>
 
-              {/* Two CTAs */}
               <Box
                 sx={{
-                  mt: 4.5,
+                  mt: { xs: 4.5, md: 5.5 },
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 1.5,
+                  gap: 1.75,
                   flexWrap: "wrap",
                 }}>
                 <Button
                   variant="contained"
                   color="primary"
                   size="large"
-                  endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 18 }} />}
+                  endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 20 }} />}
                   onClick={scrollToForm}
-                  sx={{
-                    px: 3,
-                    py: 1.4,
-                    fontSize: 14.5,
-                    fontWeight: 600,
-                  }}>
+                  sx={{ px: 3.5, py: 1.65, fontSize: 15.5, fontWeight: 600 }}>
                   Start Building
                 </Button>
                 <Button
                   variant="outlined"
                   color="primary"
                   size="large"
-                  endIcon={<OpenInNewRoundedIcon sx={{ fontSize: 16 }} />}
+                  endIcon={<OpenInNewRoundedIcon sx={{ fontSize: 17 }} />}
                   href="https://ice.io"
                   target="_blank"
                   rel="noopener noreferrer"
-                  sx={{
-                    px: 3,
-                    py: 1.4,
-                    fontSize: 14.5,
-                    fontWeight: 500,
-                  }}>
+                  sx={{ px: 3.5, py: 1.65, fontSize: 15.5, fontWeight: 500 }}>
                   Explore Network
                 </Button>
               </Box>
 
-              {/* Recent activity status pills */}
               <Box
                 sx={{
-                  mt: 4,
+                  mt: { xs: 4, md: 5 },
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 1.25,
                   flexWrap: "wrap",
-                  px: 2,
                 }}>
                 {RECENT_ACTIVITY.map((item, i) => (
                   <Box
@@ -266,8 +280,8 @@ function DeployerPage() {
                       background: "rgba(255,255,255,0.03)",
                       border: "1px solid rgba(255,255,255,0.07)",
                       borderRadius: 999,
-                      px: 1.5,
-                      py: 0.7,
+                      px: 1.6,
+                      py: 0.75,
                     }}>
                     <Box
                       className="status-dot"
@@ -280,33 +294,25 @@ function DeployerPage() {
                       }}
                     />
                     <Typography
-                      sx={{
-                        fontSize: 11,
-                        color: "rgba(255,255,255,0.55)",
-                        fontWeight: 500,
-                      }}>
+                      sx={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", fontWeight: 500 }}>
                       {item.label}:
                     </Typography>
                     <Box
                       sx={{
                         fontFamily: "'SF Mono', Menlo, Monaco, 'Courier New', monospace",
-                        fontSize: 11,
+                        fontSize: 11.5,
                         fontWeight: 700,
                         color: "rgba(255,255,255,0.92)",
                         background: "rgba(255,255,255,0.06)",
                         borderRadius: 0.75,
-                        px: 0.75,
-                        py: 0.15,
+                        px: 0.85,
+                        py: 0.2,
                         letterSpacing: "0.02em",
                       }}>
                       {item.token}
                     </Box>
                     <Typography
-                      sx={{
-                        fontSize: 11,
-                        color: "rgba(255,255,255,0.45)",
-                        fontWeight: 500,
-                      }}>
+                      sx={{ fontSize: 11.5, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>
                       {item.time}
                     </Typography>
                   </Box>
@@ -314,15 +320,15 @@ function DeployerPage() {
               </Box>
             </Box>
 
-            {/* ========= STATS BAR ========= */}
+            {/* ============================================ STATS BAR ============================================ */}
             <Box
               sx={{
                 position: "relative",
                 zIndex: 1,
-                mt: { xs: 5, md: 7 },
+                mt: { xs: 6, md: 9 },
                 maxWidth: 1100,
                 mx: "auto",
-                px: { xs: 1, md: 0 },
+                px: { xs: 2, md: 0 },
               }}>
               <Box
                 className="glass-card"
@@ -330,7 +336,7 @@ function DeployerPage() {
                   display: "grid",
                   gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4, 1fr)" },
                   gap: { xs: 3, md: 0 },
-                  py: { xs: 4, md: 4.5 },
+                  py: { xs: 4, md: 5.5 },
                   px: { xs: 3, md: 4 },
                   borderRadius: "20px !important",
                 }}>
@@ -346,7 +352,7 @@ function DeployerPage() {
                     }}>
                     <Typography
                       sx={{
-                        fontSize: { xs: 30, md: 38 },
+                        fontSize: { xs: 34, md: 50 },
                         fontWeight: 700,
                         letterSpacing: "-0.04em",
                         color: "#FFFFFF",
@@ -356,8 +362,8 @@ function DeployerPage() {
                     </Typography>
                     <Typography
                       sx={{
-                        mt: 1,
-                        fontSize: 10.5,
+                        mt: 1.25,
+                        fontSize: 11,
                         fontWeight: 600,
                         letterSpacing: "0.18em",
                         textTransform: "uppercase",
@@ -370,47 +376,254 @@ function DeployerPage() {
               </Box>
             </Box>
 
-            {/* ========= TOKEN DEPLOYMENT (form section) =========
-                Phase B will rebuild the heading area; the form below
-                is preserved as-is so existing wallet/contract logic
-                keeps working. */}
+            {/* ============================================ TOKEN DEPLOYMENT ============================================ */}
             <Box
               id="token-deployment"
-              sx={{ position: "relative", zIndex: 1, mt: { xs: 10, md: 14 } }}>
-              <FormWrapper sx={{ maxWidth: 1280, mx: "auto" }}>
-                <SubHeadingWrapper>
-                  <Box sx={{ position: "relative", zIndex: 1 }}>
-                    <Typography
-                      sx={{
-                        fontSize: 28,
-                        fontWeight: 700,
-                        mb: 1,
-                        letterSpacing: "-0.03em",
-                      }}>
-                      Configure Token
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: "rgba(255,255,255,0.5)",
-                        fontSize: 14,
-                        mb: 4,
-                      }}>
-                      Define the core parameters of your new ION Jetton asset.
-                    </Typography>
-
-                    <Form
-                      isLoading={isLoading}
-                      submitText="Deploy to Mainnet"
-                      onSubmit={deployContract}
-                      inputs={formSpec}
-                    />
-                  </Box>
-                </SubHeadingWrapper>
-
-                <Box sx={{ width: { xs: "100%", lg: 380 }, flexShrink: 0 }}>
-                  <Description />
+              sx={{ position: "relative", zIndex: 1, mt: { xs: 12, md: 18 } }}>
+              <Box sx={{ textAlign: "left", maxWidth: 1280, mx: "auto", px: { xs: 2, md: 0 } }}>
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 1,
+                    background: "rgba(167,139,250,0.10)",
+                    border: "1px solid rgba(167,139,250,0.24)",
+                    borderRadius: 999,
+                    px: 1.85,
+                    py: 0.7,
+                    mb: 2.25,
+                  }}>
+                  <Box
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: "#A78BFA",
+                      boxShadow: "0 0 10px rgba(167,139,250,0.7)",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#C4B5FD",
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                    }}>
+                    Creator Studio
+                  </Typography>
                 </Box>
-              </FormWrapper>
+
+                <Typography
+                  sx={{
+                    fontSize: { xs: 36, md: 52 },
+                    fontWeight: 700,
+                    color: "#fff",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1.05,
+                  }}>
+                  Token Deployment
+                </Typography>
+                <Typography
+                  sx={{
+                    mt: 1.75,
+                    color: "rgba(255,255,255,0.5)",
+                    fontSize: { xs: 15, md: 17 },
+                    fontWeight: 400,
+                  }}>
+                  Simplified Jetton creation with enterprise-grade features.
+                </Typography>
+              </Box>
+
+              <Box sx={{ mt: { xs: 4, md: 6 } }}>
+                <FormWrapper sx={{ maxWidth: 1280, mx: "auto" }}>
+                  <SubHeadingWrapper>
+                    <TokenDeploymentForm onSubmit={deployContract} isLoading={isLoading} />
+                  </SubHeadingWrapper>
+
+                  <Box sx={{ width: { xs: "100%", lg: 380 }, flexShrink: 0 }}>
+                    <LaunchSummary />
+                  </Box>
+                </FormWrapper>
+              </Box>
+            </Box>
+
+            {/* ============================================ ENTERPRISE GRADE ============================================ */}
+            <Box
+              sx={{
+                position: "relative",
+                zIndex: 1,
+                mt: { xs: 12, md: 18 },
+                maxWidth: 1280,
+                mx: "auto",
+                px: { xs: 2, md: 0 },
+                textAlign: "center",
+              }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: 32, md: 46 },
+                  fontWeight: 700,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1.1,
+                }}>
+                <Box component="span" sx={{ color: "#fff" }}>
+                  Enterprise Grade.
+                </Box>{" "}
+                <Box component="span" sx={{ color: "rgba(255,255,255,0.32)" }}>
+                  Developer Friendly.
+                </Box>
+              </Typography>
+              <Typography
+                sx={{
+                  mt: 1.75,
+                  color: "rgba(255,255,255,0.5)",
+                  fontSize: { xs: 15, md: 17 },
+                  maxWidth: 660,
+                  mx: "auto",
+                }}>
+                Everything you need to launch and manage digital assets at scale, out of the box.
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: { xs: 5, md: 6 },
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+                  gap: { xs: 2, md: 2.5 },
+                  textAlign: "left",
+                }}>
+                {FEATURE_CARDS.map((card, i) => (
+                  <Box
+                    key={i}
+                    className="glass-card"
+                    sx={{
+                      p: { xs: 3, md: 4 },
+                      borderRadius: "18px !important",
+                      transition: "transform 220ms ease, box-shadow 220ms ease",
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 22px 56px rgba(0,0,0,0.4)",
+                      },
+                    }}>
+                    <Box
+                      sx={{
+                        width: 46,
+                        height: 46,
+                        borderRadius: "13px",
+                        background: card.iconBg,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        mb: 2.25,
+                      }}>
+                      {card.icon}
+                    </Box>
+                    <Typography
+                      sx={{
+                        fontSize: 18,
+                        fontWeight: 600,
+                        color: "#fff",
+                        mb: 1,
+                        letterSpacing: "-0.02em",
+                      }}>
+                      {card.title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        color: "rgba(255,255,255,0.52)",
+                      }}>
+                      {card.description}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+
+            {/* ============================================ READY TO BUILD CTA ============================================ */}
+            <Box
+              sx={{
+                position: "relative",
+                zIndex: 1,
+                mt: { xs: 12, md: 18 },
+                maxWidth: 1280,
+                mx: "auto",
+                px: { xs: 2, md: 0 },
+              }}>
+              <Box
+                className="glass-card"
+                sx={{
+                  position: "relative",
+                  p: { xs: 5, md: 9 },
+                  borderRadius: "24px !important",
+                  textAlign: "center",
+                  overflow: "hidden",
+                }}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "radial-gradient(ellipse 60% 80% at 50% 0%, rgba(99,102,241,0.18) 0%, transparent 70%)",
+                    pointerEvents: "none",
+                  }}
+                />
+                <Box sx={{ position: "relative", zIndex: 1 }}>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 32, md: 50 },
+                      fontWeight: 700,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1.1,
+                      color: "#fff",
+                    }}>
+                    Ready to build the
+                    <br />
+                    <span className="gradient-text">Next Big Thing?</span>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      mt: 3,
+                      maxWidth: 620,
+                      mx: "auto",
+                      color: "rgba(255,255,255,0.55)",
+                      fontSize: { xs: 15, md: 16 },
+                      lineHeight: 1.65,
+                    }}>
+                    Be among the first to deploy on Ice Open Network. The infrastructure is live,
+                    the tools are open, and the chain is yours to build on.
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      mt: 4,
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 1.75,
+                      flexWrap: "wrap",
+                    }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      onClick={scrollToForm}
+                      sx={{ px: 4, py: 1.7, fontSize: 15.5, fontWeight: 600 }}>
+                      Get Started Now
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="large"
+                      href="https://github.com/professorblock/ion-minter#readme"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ px: 4, py: 1.7, fontSize: 15.5, fontWeight: 500 }}>
+                      Read the Docs
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Fade>
@@ -421,43 +634,50 @@ function DeployerPage() {
 
 export { DeployerPage };
 
-/* ================================================================
-   Launch Summary side panel — kept from previous version.
-   Will be restyled in Phase B.
-   ================================================================ */
-function Description() {
+function LaunchSummary() {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <StyledDescription
         sx={{
-          borderRadius: "24px",
+          borderRadius: "20px",
           p: 3.5,
           background:
             "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)",
           border: "1px solid rgba(255,255,255,0.07)",
         }}>
-        <Typography
-          sx={{
-            fontSize: 10.5,
-            fontWeight: 700,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.5)",
-            mb: 3,
-          }}>
-          Launch Summary
-        </Typography>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+        <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.85, mb: 2.75 }}>
           <Box
             sx={{
+              width: 12,
+              height: 12,
               display: "flex",
-              justifyContent: "space-between",
               alignItems: "center",
-              pb: 2,
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
+              justifyContent: "center",
             }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>Network</Typography>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 12h4l2-7 4 14 2-7h6"
+                stroke="#60A5FA"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Box>
+          <Typography
+            sx={{
+              fontSize: 10.5,
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.55)",
+            }}>
+            Launch Summary
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.25 }}>
+          <Row label="Network">
             <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}>
               <Box
                 sx={{
@@ -472,32 +692,15 @@ function Description() {
                 ION Mainnet
               </Typography>
             </Box>
-          </Box>
+          </Row>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              pb: 2,
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
-            }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>Standard</Typography>
+          <Row label="Standard">
             <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
               Jetton (TIP-3)
             </Typography>
-          </Box>
+          </Row>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              pb: 2.5,
-            }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>
-              Estimated Fee
-            </Typography>
+          <Row label="Estimated Fee" alignTop>
             <Box sx={{ textAlign: "right" }}>
               <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#34D399", lineHeight: 1.1 }}>
                 0.05 ION
@@ -506,34 +709,7 @@ function Description() {
                 ~$0.001 USD
               </Typography>
             </Box>
-          </Box>
-
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              mt: 0.5,
-              py: 1.4,
-              borderRadius: "12px",
-              fontWeight: 600,
-              fontSize: 14,
-            }}>
-            Deploy to Mainnet
-          </Button>
-
-          <Typography
-            sx={{
-              fontSize: 11,
-              color: "rgba(255,255,255,0.4)",
-              textAlign: "center",
-              lineHeight: 1.5,
-              mt: 0.5,
-            }}>
-            Smart contract deployment is immutable. Please verify all
-            <br />
-            details before confirming the transaction.
-          </Typography>
+          </Row>
         </Box>
       </StyledDescription>
 
@@ -550,14 +726,7 @@ function Description() {
               justifyContent: "center",
               mb: 1.25,
             }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z"
-                stroke="#60A5FA"
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ShieldRoundedIcon sx={{ fontSize: 16, color: "#60A5FA" }} />
           </Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#fff", mb: 0.4 }}>
             Audited
@@ -599,3 +768,26 @@ function Description() {
     </Box>
   );
 }
+
+const Row = ({
+  label,
+  children,
+  alignTop,
+}: {
+  label: string;
+  children: React.ReactNode;
+  alignTop?: boolean;
+}) => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: alignTop ? "flex-start" : "center",
+      pb: 2,
+      borderBottom: "1px solid rgba(255,255,255,0.06)",
+      "&:last-of-type": { borderBottom: "none", pb: 0 },
+    }}>
+    <Typography sx={{ color: "rgba(255,255,255,0.55)", fontSize: 13 }}>{label}</Typography>
+    {children}
+  </Box>
+);

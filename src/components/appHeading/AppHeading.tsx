@@ -26,7 +26,9 @@ interface HeadingTextProps {
 const HeadingText = styled(Typography)((props: HeadingTextProps) => ({
   fontSize: props.fontSize || 14,
   fontWeight: props.fontWeight || 400,
-  color: props.color || "#000",
+  // Default to white instead of black so headings are visible on the
+  // dark theme. Call sites that pass an explicit color still take effect.
+  color: props.color || "#FFFFFF",
   textAlign: props.textAlign,
   wordBreak: "break-all",
 }));

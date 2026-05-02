@@ -66,9 +66,9 @@ export const Token = () => {
                   <AppHeading
                     text={`${name} ${symbol && `(${symbol})`}`}
                     variant="h2"
-                    fontWeight={800}
-                    fontSize={20}
-                    color="#161C28"
+                    fontWeight={700}
+                    fontSize={22}
+                    color="#FFFFFF"
                   />
                 )}
               </LoadingContainer>
@@ -79,9 +79,9 @@ export const Token = () => {
                       text={description || "Description"}
                       limitText={80}
                       variant="h4"
-                      fontWeight={500}
-                      fontSize={16}
-                      color="#728A96"
+                      fontWeight={400}
+                      fontSize={14}
+                      color="rgba(255,255,255,0.55)"
                     />
                   </Box>
                 </Tooltip>

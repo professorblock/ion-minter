@@ -22,10 +22,10 @@ export const Wallet = () => {
       <AppHeading
         text={`${!params.get("address") ? "Connected" : ""} Jetton wallet`}
         variant="h4"
-        fontWeight={800}
-        fontSize={20}
-        marginBottom={20}
-        color="#161C28"
+        fontWeight={700}
+        fontSize={22}
+        marginBottom={24}
+        color="#FFFFFF"
       />
       <StyledCategoryFields>
         <DataRow
