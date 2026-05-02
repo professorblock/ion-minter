@@ -23,7 +23,7 @@ root.render(
         <Router basename="/">
           <SnackbarProvider maxSnack={3}>
             <TonConnectUIProvider
-              manifestUrl="https://professorblock.github.io/ion-minter/tonconnect-manifest.json"
+              manifestUrl="https://launch.ionhub.io/tonconnect-manifest.json"
               uiPreferences={{ theme: THEME.LIGHT }}>
               <App />
             </TonConnectUIProvider>
